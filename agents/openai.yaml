@@ -1,0 +1,4 @@
+interface:
+  display_name: "Market Inflection Radar"
+  short_description: "Post-close S-level industrial inflection radar"
+  default_prompt: "Use $market-inflection-radar to run today's post-close industrial inflection scan."

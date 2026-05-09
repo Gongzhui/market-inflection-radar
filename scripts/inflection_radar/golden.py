@@ -1,0 +1,86 @@
+from .gates import Candidate
+
+
+def golden_cases() -> list[Candidate]:
+    all_pass = {
+        "huge_industry_space": True,
+        "short_term_hard_to_disprove": True,
+        "real_external_catalyst": True,
+        "early_large_bullish_confirmation": True,
+        "high_purity_assets": True,
+        "reasonable_odds_position": True,
+        "bear_case_not_broken": True,
+    }
+
+    return [
+        Candidate(
+            theme="GPT-4 triggered LLM compute repricing and AI optical module demand",
+            date="2023-03-22",
+            gates=all_pass,
+            evidence_grades=["high", "medium"],
+            has_core_asset=True,
+            anti_hype_blocks=[],
+            expected_rating="S",
+            note="Must identify Zhongji Innolight as high-purity AI optical module leader, not generic ChatGPT activity.",
+        ),
+        Candidate(
+            theme="AI-driven DRAM/HBM tightness and memory supercycle after trade-risk easing",
+            date="2025-05-12",
+            gates=all_pass,
+            evidence_grades=["high", "medium"],
+            has_core_asset=True,
+            anti_hype_blocks=[],
+            expected_rating="S",
+            note="Must frame Micron confirmation as AI memory supercycle, not generic storage price increase.",
+        ),
+        Candidate(
+            theme="Global AI supply-chain core asset risk-discount removal",
+            date="2025-05-08",
+            gates=all_pass,
+            evidence_grades=["high", "medium"],
+            has_core_asset=True,
+            anti_hype_blocks=[],
+            expected_rating="S",
+            note="Must frame Zhongji Innolight rally as risk-discount removal, not normal oversold rebound.",
+        ),
+        Candidate(
+            theme="Ordinary theme rotation",
+            date="2099-01-01",
+            gates={**all_pass, "real_external_catalyst": False},
+            evidence_grades=["medium"],
+            has_core_asset=True,
+            anti_hype_blocks=[],
+            expected_rating="C",
+            note="No dated external catalyst.",
+        ),
+        Candidate(
+            theme="Forum rumor-driven move",
+            date="2099-01-02",
+            gates=all_pass,
+            evidence_grades=["low"],
+            has_core_asset=True,
+            anti_hype_blocks=["forum rumor as main driver"],
+            expected_rating="C",
+            note="Low-grade evidence cannot anchor S.",
+        ),
+        Candidate(
+            theme="Late back-row catch-up after climax",
+            date="2099-01-03",
+            gates={**all_pass, "early_large_bullish_confirmation": False},
+            evidence_grades=["high"],
+            has_core_asset=False,
+            anti_hype_blocks=["late back-row catch-up"],
+            expected_rating="C",
+            note="Back-row补涨 after continuous move cannot be S.",
+        ),
+        Candidate(
+            theme="Small cap story without earnings path",
+            date="2099-01-04",
+            gates={**all_pass, "high_purity_assets": False},
+            evidence_grades=["medium"],
+            has_core_asset=False,
+            anti_hype_blocks=[],
+            expected_rating="C",
+            note="No visible earnings realization path or Core asset; allowed cap is B/C, scaffold rejects as C.",
+        ),
+    ]
