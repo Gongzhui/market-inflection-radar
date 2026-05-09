@@ -41,6 +41,20 @@ python -m inflection_radar sources query --adapter live --source policy --date 2
 python -m inflection_radar collect --adapter live --date 2025-05-12 --theme "AI memory" --out /tmp/mir-source-bundle.md
 ```
 
+## Daily Scan Watchlist
+
+`run-today --adapter live` does not wait for a user-supplied theme. It resolves the previous trading day by a weekday heuristic and scans this default watchlist:
+
+- AI compute, optical modules, CPO, accelerators.
+- AI memory, DRAM, HBM, storage.
+- Semiconductor export controls, tariffs, and AI supply chain.
+- Hyperscaler capex, AI datacenter power, cooling, and grid.
+- Robotics, embodied AI, sensors, actuators.
+- Biotech platform breakthroughs, obesity, GLP-1, oncology.
+- New energy storage, battery materials, copper, uranium.
+
+The daily scan is deliberately broad and imperfect. Its job is to prove the radar looked across the major high-convexity industrial buckets before saying "no S-level setup." It does not by itself authorize an S rating.
+
 ## Search Fallback Requirements
 
 Some critical sources do not have stable unauthenticated public APIs. When the CLI returns `search-required`, `unavailable`, or no records for a gate-critical claim, Codex must use available web/search/browser tools before writing the final rating.

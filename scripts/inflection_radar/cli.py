@@ -1,8 +1,7 @@
 import argparse
-from datetime import date
 
-from .adapters import NullDataAdapter, ScanContext
 from .blind_packets import packet_ids, render_packet, write_packets
+from .daily_scan import DEFAULT_DAILY_THEMES, render_daily_scan, run_daily_scan
 from .gates import Candidate, assess_candidate, summarize_candidates
 from .golden import golden_cases
 from .sources import (
@@ -18,21 +17,24 @@ from .sources import (
 )
 
 
-def run_today(_: argparse.Namespace) -> int:
-    today = date.today().isoformat()
-    candidates = NullDataAdapter().collect_candidates(ScanContext(date=today))
-    print(f"market-inflection-radar scan date: {today}")
-    print(summarize_candidates(candidates))
-    print("状态：live public adapters are available for Yahoo market data, SEC filings/companyfacts, and Federal Register policy search.")
-    print("下一步：运行 collect --adapter live；对 search-required 或缺失的关键证据使用网页搜索补齐，再按七闸门审查。")
+def run_today(args: argparse.Namespace) -> int:
+    scan = run_daily_scan(
+        adapter=args.adapter,
+        limit_per_source=args.limit,
+        themes=tuple(args.theme or DEFAULT_DAILY_THEMES),
+    )
+    print(render_daily_scan(scan), end="")
     return 0
 
 
 def run_date(args: argparse.Namespace) -> int:
-    candidates = NullDataAdapter().collect_candidates(ScanContext(date=args.date))
-    print(f"market-inflection-radar scan date: {args.date}")
-    print(summarize_candidates(candidates))
-    print("状态：historical scan needs collect --adapter live plus search fallback for sources without stable public APIs.")
+    scan = run_daily_scan(
+        scan_date=args.date,
+        adapter=args.adapter,
+        limit_per_source=args.limit,
+        themes=tuple(args.theme or DEFAULT_DAILY_THEMES),
+    )
+    print(render_daily_scan(scan), end="")
     return 0
 
 
@@ -179,10 +181,16 @@ def build_parser() -> argparse.ArgumentParser:
     subparsers = parser.add_subparsers(dest="command", required=True)
 
     run_today_parser = subparsers.add_parser("run-today", help="Run today's post-close scan.")
+    run_today_parser.add_argument("--adapter", choices=["fixture", "null", "live"], default="live", help="Adapter mode.")
+    run_today_parser.add_argument("--theme", action="append", help="Optional theme override. Can be repeated.")
+    run_today_parser.add_argument("--limit", type=int, default=3, help="Maximum records per source per theme.")
     run_today_parser.set_defaults(func=run_today)
 
     run_date_parser = subparsers.add_parser("run-date", help="Run a historical date scan.")
     run_date_parser.add_argument("--date", required=True, help="Scan date in YYYY-MM-DD format.")
+    run_date_parser.add_argument("--adapter", choices=["fixture", "null", "live"], default="live", help="Adapter mode.")
+    run_date_parser.add_argument("--theme", action="append", help="Optional theme override. Can be repeated.")
+    run_date_parser.add_argument("--limit", type=int, default=3, help="Maximum records per source per theme.")
     run_date_parser.set_defaults(func=run_date)
 
     deep_dive_parser = subparsers.add_parser("deep-dive", help="Prepare a seven-gate deep dive for one theme.")

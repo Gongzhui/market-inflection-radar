@@ -15,8 +15,8 @@ From this skill directory:
 
 ```bash
 cd scripts
-python -m inflection_radar run-today
-python -m inflection_radar run-date --date YYYY-MM-DD
+python -m inflection_radar run-today --adapter live
+python -m inflection_radar run-date --date YYYY-MM-DD --adapter live
 python -m inflection_radar deep-dive --theme xxx --date YYYY-MM-DD
 python -m inflection_radar sources list --adapter live
 python -m inflection_radar sources query --adapter live --source market --date YYYY-MM-DD --entity MU
@@ -47,15 +47,16 @@ If any gate fails, do not output S. Report the first failed gate and cap the can
 
 ## Operating Workflow
 
-1. Run the CLI command for the requested date or theme.
-2. For production-like scans, run `sources list --adapter live` to confirm public adapters, then run `collect --adapter live --date ... --theme ...` to assemble the dated source bundle before deciding. Use `fixture` only for tests.
-3. Read `references/mission.md` and `references/opportunity-definition.md` if the task is ambiguous.
-4. For any possible S candidate, load `references/scoring-rubric.md`, `references/evidence-standards.md`, `references/anti-hype-checklist.md`, and `references/report-template.md`.
-5. Build an evidence table before writing the rating. High-grade evidence must anchor the core thesis; low-grade evidence may only describe narrative spread or crowding.
-6. If a live source returns `search-required`, `unavailable`, or zero records for a gate-critical claim, use available web/search/browser tools to find official or high-grade sources with the scan date as a hard cutoff. Log the query, source, date, and whether it failed. Do not treat a missing source as verified.
-7. Apply the anti-hype checklist after the positive case, not before it. A single hard failure there blocks S.
-8. Use `references/golden-cases.md` as evaluator-only regression behavior. Do not feed its answer-key language to an agent being forward-tested.
-9. For blind validation, generate packets with `python -m inflection_radar blind-packet --case all --output-dir /tmp/mir-blind` and give the target agent only the generated packet plus this Skill. The packet must contain only dated, as-of information, not expected ratings or correct labels. The source packet files live in `references/golden-packets/`.
+1. Run `run-today --adapter live` for a daily request. This command must scan the previous trading day using the built-in daily theme watchlist; do not stop merely because no pre-existing candidate was supplied.
+2. Treat the CLI output as an automated source sweep, not a full conclusion. It must show theme coverage, source counts, and `search-required` follow-ups.
+3. For production-like scans, run `sources list --adapter live` to confirm public adapters, then run targeted `collect --adapter live --date ... --theme ...` for any theme that looks non-empty or gate-relevant. Use `fixture` only for tests.
+4. Read `references/mission.md` and `references/opportunity-definition.md` if the task is ambiguous.
+5. For any possible S candidate, load `references/scoring-rubric.md`, `references/evidence-standards.md`, `references/anti-hype-checklist.md`, and `references/report-template.md`.
+6. Build an evidence table before writing the rating. High-grade evidence must anchor the core thesis; low-grade evidence may only describe narrative spread or crowding.
+7. If a live source returns `search-required`, `unavailable`, or zero records for a gate-critical claim, use available web/search/browser tools to find official or high-grade sources with the scan date as a hard cutoff. Log the query, source, date, and whether it failed. Do not treat a missing source as verified.
+8. Apply the anti-hype checklist after the positive case, not before it. A single hard failure there blocks S.
+9. Use `references/golden-cases.md` as evaluator-only regression behavior. Do not feed its answer-key language to an agent being forward-tested.
+10. For blind validation, generate packets with `python -m inflection_radar blind-packet --case all --output-dir /tmp/mir-blind` and give the target agent only the generated packet plus this Skill. The packet must contain only dated, as-of information, not expected ratings or correct labels. The source packet files live in `references/golden-packets/`.
 
 ## Output Rules
 

@@ -1135,8 +1135,12 @@ def _search_blob(record: SourceRecord) -> str:
 def _keyword_matches(keyword: str, blob: str) -> bool:
     if keyword in blob:
         return True
-    tokens = re.findall(r"[a-z0-9_.+-]+", keyword)
-    return bool(tokens) and all(token in blob for token in tokens)
+    tokens = [
+        token
+        for token in re.split(r"[^a-z0-9\u4e00-\u9fff_.+-]+", keyword.lower())
+        if len(token) >= 2 and token not in {"and", "the", "with", "ai", "supply", "chain"}
+    ]
+    return bool(tokens) and any(token in blob for token in tokens)
 
 
 def _render_record(record: SourceRecord) -> list[str]:
